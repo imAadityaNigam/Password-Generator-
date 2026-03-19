@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg,#667eea,#764ba2);
+    }
+
+    .container{
+      background:#fff;
+      padding:25px;
+      border-radius:12px;
+      width:350px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .output-box{
+      display:flex;
+      margin-bottom:15px;
+    }
+
+    .output-box input{
+      flex:1;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:6px 0 0 6px;
+      outline:none;
+    }
+
+    .output-box button{
+      padding:10px;
+      border:none;
+      background:#667eea;
+      color:#fff;
+      cursor:pointer;
+      border-radius:0 6px 6px 0;
+    }
+
+    .options{
+      margin:10px 0;
+    }
+
+    .options label{
+      display:block;
+      margin:8px 0;
+    }
+
+    .generate-btn{
+      width:100%;
+      padding:10px;
+      border:none;
+      background:#764ba2;
+      color:#fff;
+      font-size:16px;
+      border-radius:6px;
+      cursor:pointer;
+    }
+
+    .strength{
+      margin-top:10px;
+      font-weight:bold;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Password Generator</h2>
+
+  <div class="output-box">
+    <input type="text" id="password" readonly>
+    <button onclick="copyPassword()">Copy</button>
+  </div>
+
+  <div class="options">
+    <label>Password Length: <span id="lengthValue">12</span></label>
+    <input type="range" id="length" min="4" max="20" value="12" oninput="updateLength()">
+
+    <label><input type="checkbox" id="uppercase" checked> Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="lowercase" checked> Lowercase (a-z)</label>
+    <label><input type="checkbox" id="numbers" checked> Numbers (0-9)</label>
+    <label><input type="checkbox" id="symbols"> Symbols (!@#$)</label>
+  </div>
+
+  <button class="generate-btn" onclick="generatePassword()">Generate Password</button>
+
+  <div class="strength" id="strength"></div>
+</div>
+
+<script>
+  function updateLength(){
+    document.getElementById('lengthValue').innerText = document.getElementById('length').value;
+  }
+
+  function generatePassword(){
+    let length = document.getElementById('length').value;
+    let upper = document.getElementById('uppercase').checked;
+    let lower = document.getElementById('lowercase').checked;
+    let number = document.getElementById('numbers').checked;
+    let symbol = document.getElementById('symbols').checked;
+
+    let chars = '';
+
+    if(upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if(lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if(number) chars += '0123456789';
+    if(symbol) chars += '!@#$%^&*()_+[]{}';
+
+    if(chars === ''){
+      alert('Select at least one option');
+      return;
+    }
+
+    let password = '';
+
+    for(let i=0;i<length;i++){
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    document.getElementById('password').value = password;
+    checkStrength(password);
+  }
+
+  function copyPassword(){
+    let pass = document.getElementById('password');
+    pass.select();
+    document.execCommand('copy');
+    alert('Password Copied!');
+  }
+
+  function checkStrength(password){
+    let strengthText = document.getElementById('strength');
+
+    if(password.length < 6){
+      strengthText.innerText = 'Weak';
+      strengthText.style.color = 'red';
+    } else if(password.length < 12){
+      strengthText.innerText = 'Medium';
+      strengthText.style.color = 'orange';
+    } else {
+      strengthText.innerText = 'Strong';
+      strengthText.style.color = 'green';
+    }
+  }
+</script>
+
+</body>
+</html>
